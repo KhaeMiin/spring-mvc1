@@ -3,6 +3,8 @@ package hello.servlet.domain.member;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.List;
 
@@ -12,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class MemberRepositoryTest {
 
     MemberRepository memberRepository = MemberRepository.getInstance();
+
+    ApplicationContext ac = new AnnotationConfigApplicationContext(MemberRepository.class);
 
     @AfterEach//테스트 하나 실행 후 얘 실행
     void afterEach() {
@@ -45,6 +49,13 @@ class MemberRepositoryTest {
         //then
         assertThat(result.size()).isEqualTo(2);
         assertThat(result).contains(member1, member2);//contains: result안에 member1,member2가 있는지
+    }
+
+    @Test
+    void findBean() {//싱글톤 확인해보깅
+        MemberRepository memberRepository = ac.getBean(MemberRepository.class);
+        System.out.println("memberRepository = " + memberRepository);
+        Assertions.assertThat(memberRepository).isInstanceOf(MemberRepository.class);
     }
 
 }
